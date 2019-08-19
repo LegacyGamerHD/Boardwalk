@@ -4,7 +4,7 @@ This is the source code for Boardwalk, a Minecraft Java Edition launcher for And
 
 # Branches
 
-This branch contains the source for Boardwalk 1.2 (the last public released version).
+This branch contains the source for Boardwalk 2.0 (the current development branch).
 
 There are three branches of development:
 
@@ -19,9 +19,28 @@ Some modified third-party components are in separate repositories:
 - [LWJGL Android port](https://github.com/BoardwalkApp/boardwalk-lwjgl)
 - [lunixbochs' and ptitSeb's glShim](https://github.com/BoardwalkApp/boardwalk-glshim)
 
-# Building
+## Building
 
 TODO - the current Boardwalk build process only works on my computer; I will post updated instructions soon.
+
+## Build LWJGL
+
+Build it
+
+copy liblwjgl32.so, liblwjgl_opengl32.so to app/libs/armeabi-v7a
+
+## Build lwjgl3override
+
+cd lwjgl3override
+./build
+
+## Build JVM
+
+build it, copy jre.tar.xz to app/src/main/assets/
+
+## Copy a Busybox
+
+Busybox in app/src/main/assets/busybox; should be statically linked.
 
 # License
 
