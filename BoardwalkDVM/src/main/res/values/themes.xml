@@ -1,0 +1,8 @@
+<resources>
+    <style name="FullscreenTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+    </style>
+    <style name="BoardwalkTheme" parent="@style/AppTheme">
+    </style>
+    <style name="BoardwalkActionBarStyle">
+    </style>
+</resources>

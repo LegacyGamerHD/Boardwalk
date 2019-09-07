@@ -1,13 +1,30 @@
-LOCAL_PATH := $(call my-dir)
+#ifeq ("$(ROOTDIR)","")
+    LOCAL_PATH := $(call my-dir)
+#else
+#    LOCAL_PATH := $(ROOTDIR)
+#endif
+
+ANALYZE      ?= no
+ANALYZE_OUTPUT?=/dev/null
 
 include $(CLEAR_VARS)
-
 TARGET_ARCH_ABI  ?=armeabi-v7a
 LOCAL_LDLIBS     := -llog
 LOCAL_MODULE     := openal
-ROOTDIR          ?= $(LOCAL_PATH)
+LOCAL_ARM_MODE   := arm
+CLANG_VERSION    ?= 3.1
+#ROOTDIR          ?= $(LOCAL_PATH)
+ROOTDIR          := $(LOCAL_PATH)
 OPENAL_DIR       := OpenAL
 MODULE           := openal
+MODULE_DST       := obj/local/$(TARGET_ARCH_ABI)/objs/openal
+ifeq ("$(BINDIR)","")
+    BINDIR       := $(abspath $(ROOTDIR)/../obj/local/$(TARGET_ARCH_ABI)/objs/ )
+else
+    BINDIR       := $(abspath $(BINDIR) )
+endif
+
+ANDROID_NDK_ROOT=/Developer/DestinyCloudFist/android-ndk-r8b
 
 LOCAL_CFLAGS    +=  -I$(ROOTDIR)/$(OPENAL_DIR) \
                     -I$(ROOTDIR)/$(OPENAL_DIR)/include \
@@ -24,6 +41,13 @@ LOCAL_CFLAGS    +=  -I$(ROOTDIR)/$(OPENAL_DIR) \
                     -g \
 
 LOCAL_LDLIBS    += -Wl,--build-id -Bsymbolic -shared
+
+# Default to Fixed-point math
+ifeq ($(TARGET_ARCH_ABI),armeabi)
+  # ARMv5, used fixed point math
+  LOCAL_CFLAGS += -marm -DOPENAL_FIXED_POINT -DOPENAL_FIXED_POINT_SHIFT=16
+endif
+
 
 MAX_SOURCES_LOW ?= 4
 MAX_SOURCES_START ?= 8
@@ -56,6 +80,15 @@ LOCAL_SRC_FILES :=  \
                     $(OPENAL_DIR)/Alc/panning.c              \
                     $(OPENAL_DIR)/Alc/mixer.c                \
                     $(OPENAL_DIR)/Alc/audiotrack.c           \
+
+
+LOCAL_CFLAGS += -DPOST_FROYO -DRELEASE_LOG=
+LOCAL_LDLIBS += -ldl
+LOCAL_SRC_FILES += $(OPENAL_DIR)/Alc/opensles.c
+
+ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
+LOCAL_CFLAGS += -DSIZEOF_LONG=8 -DSIZEOF_VOIDP=8
+endif
 
 include $(BUILD_SHARED_LIBRARY)
 
